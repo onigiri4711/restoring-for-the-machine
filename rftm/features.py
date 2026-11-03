@@ -48,10 +48,15 @@ def _find_sequential(detector):
 
 
 class FeatureTap:
-    """Forward hooks that record the input tensor and the output of every hooked layer during one predict() call.
+    """Records the input tensor and the output of every hooked YOLO layer during one predict() call.
+
+    Uses torch's *global* module hooks and keeps only calls to YOLO's top-level layers, which ultralytics marks
+    with the attributes ``i`` (layer index) and ``f`` (where its input comes from). This works whichever copy of the
+    model the predictor runs: some ultralytics versions run a copy, not ``detector.model``, so hooks attached to
+    ``detector.model``'s layers never fire. Other networks (DnCNN) have no such attributes and are ignored.
 
     Usage:
-        tap = FeatureTap(detector)          # call after one warm-up detector.predict(...)
+        tap = FeatureTap(detector)
         detector.predict(img, ...)
         feats = tap.pop()                   # {"input": (1,3,H,W), 0: (1,16,H/2,W/2), ...}
     """
@@ -62,23 +67,29 @@ class FeatureTap:
         if layers is None:
             layers = [i for i, t in self.layer_types.items() if t not in SKIP_TYPES]
         self.layers = list(layers)
+        self._wanted = set(self.layers)
         self._store = {}
-        self._handles = [seq[0].register_forward_pre_hook(self._pre_hook)]
-        for i in self.layers:
-            self._handles.append(seq[i].register_forward_hook(self._make_hook(i)))
+        from torch.nn.modules.module import register_module_forward_hook, register_module_forward_pre_hook
+        self._handles = [register_module_forward_pre_hook(self._pre_hook), register_module_forward_hook(self._hook)]
+
+    @staticmethod
+    def _yolo_index(module):
+        i = getattr(module, "i", None)
+        return i if isinstance(i, int) and hasattr(module, "f") else None
 
     def _pre_hook(self, module, args):
-        self._store["input"] = args[0].detach()
+        if self._yolo_index(module) == 0 and args and torch.is_tensor(args[0]):
+            self._store["input"] = args[0].detach()
 
-    def _make_hook(self, i):
-        def hook(module, args, out):
+    def _hook(self, module, args, out):
+        i = self._yolo_index(module)
+        if i in self._wanted and torch.is_tensor(out):
             self._store[i] = out.detach()
-        return hook
 
     def pop(self):
         feats, self._store = self._store, {}
         missing = [i for i in ["input"] + self.layers if i not in feats]
-        assert not missing, f"hooks did not fire for layers {missing}: is the predictor running a different model?"
+        assert not missing, f"hooks did not fire for layers {missing}: has the ultralytics layer API changed?"
         return feats
 
     def remove(self):
