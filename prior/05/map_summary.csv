@@ -1,0 +1,13 @@
+degradation,severity,none,classical,dncnn,clahe_L
+gaussian,sigma=15,0.319,0.359,0.375,
+gaussian,sigma=25,0.241,0.305,0.354,
+gaussian,sigma=35,0.181,0.264,0.326,
+gaussian,sigma=50,0.088,0.169,0.304,
+jpeg,q=70,0.376,0.378,0.378,
+jpeg,q=50,0.349,0.366,0.348,
+jpeg,q=30,0.309,0.346,0.305,
+jpeg,q=10,0.125,0.231,0.121,
+low_light,l=0.4,0.274,0.286,0.325,0.25
+low_light,l=0.6,0.207,0.226,0.283,0.174
+low_light,l=0.8,0.121,0.134,0.213,0.095
+low_light,l=0.9,0.056,0.088,0.159,0.044

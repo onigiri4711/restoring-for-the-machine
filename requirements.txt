@@ -1,0 +1,12 @@
+numpy
+scipy
+opencv-python-headless
+scikit-image
+pandas
+matplotlib
+jupyter
+torch
+torchvision
+ultralytics
+pycocotools
+bm3d

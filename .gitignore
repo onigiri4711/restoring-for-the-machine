@@ -1,0 +1,16 @@
+# Python and Jupyter
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Datasets and large downloads (fetched by the notebooks)
+data/
+coco/
+*.zip
+yolov8n.pt
+*.pt
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
