@@ -3,8 +3,7 @@
 **Written 2026-11-03, before any Part A experiment was run.** The thresholds below are fixed. If a later commit changes
 one, the commit message says why, and the report states both the old and the new value. The git history is the record.
 
-Part B's hypotheses (H7–H10) are provisional until Part A is done. They get frozen in a separate commit **before**
-notebook 08 is run.
+Part B's hypotheses (H7–H10) were frozen in a separate commit after Part A and **before** notebook 08 was run.
 
 ---
 
@@ -115,37 +114,49 @@ the feature loss as a comparison.
 
 ---
 
-## 2. Part B: task-driven restoration (notebook 08, provisional)
+## 2. Part B: task-driven restoration (notebook 08) · **frozen 2026-11-03, after Part A, before notebook 08 ran**
+
+Changes from the provisional version are marked *(changed)*, with the reason.
 
 ### 2.1 Setup
 
-* **Start:** `dncnn_last.pt`. **Detector:** YOLOv8n, frozen, in eval mode (BatchNorm statistics fixed); gradients flow
-  through it into the denoiser only.
-* **Loss:** L = MSE(x̂, x) + λ · D(YOLO_l(x̂), YOLO_l(x)), with D and the layers l from Part A. The feature term is
-  divided by its value at initialisation, so λ = 1 means "equal weight to MSE at the start".
-* **Data:** COCO val2017 images **not** in the 300-image test subset (4,700 images; YOLO never trained on val). 4,200
-  for training, 500 for choosing λ and the number of steps. Blind Gaussian noise σ ~ U(0, 55), as in notebook 04.
-  Random 320 × 320 crops, batch 8, Adam 1e-4, a fixed step budget on a T4.
-* **Control:** the same fine-tuning with **λ = 0** (MSE only, same data, same steps). Every claim compares against
-  this control, not against the original DnCNN, so that "more training on COCO" is not mistaken for "task loss".
+* **Start:** `dncnn_last.pt`. **Detector in the loss:** YOLOv8n, frozen, eval mode (BatchNorm statistics fixed);
+  gradients flow through it into the denoiser only.
+* **Feature term (from Part A's rule, `results/07/layers_for_partB.json`):** cosine distance at **layer 21** (P5),
+  computed on the restored vs the clean crop. Part A found three options within 0.01 of each other, so one extra
+  model uses the **neck mean (layers 15, 18, 21)** at the chosen λ\*, as a comparison (exploratory).
+* **Loss** *(changed: both terms normalised, so that "λ = 1" really means equal weight at the start)*:
+  L = MSE / MSE₀ + λ · D / D₀, where MSE₀ and D₀ are the mean values of the two terms for the *starting* DnCNN on
+  20 fixed training batches. The same constants are used for every λ.
+* **Data:** COCO val2017 images **not** in the 300-image test subset (4,700). Shuffled with seed 0: 4,200 for training,
+  500 for choosing λ. Blind Gaussian noise σ ~ U(0, 55) per crop, as in notebook 04. Random 320 × 320 crops with
+  horizontal flips, batch 8.
+* **Training** *(changed: a fixed step budget; no step selection, to keep the λ comparison simple)*: Adam, lr 1e-4,
+  2,000 steps, lr × 0.1 for the last 500, gradient-norm clip 1.0. Every λ uses the same seed, so all runs see the
+  same crops and noise in the same order.
+* **Control:** λ = 0 (MSE only, same data, same steps, same seed). Every claim compares against this control.
 * **Sweep:** λ ∈ {0, 0.03, 0.1, 0.3, 1, 3}.
-* **Test:** the 300-image subset at σ = 15, 25, 50: PSNR, YOLOv8n mAP, paired bootstrap CIs (as nb 05b), and the
-  PSNR-vs-mAP curve over λ.
-* **Second detector:** torchvision Faster R-CNN ResNet-50-FPN v2 (COCO weights): a two-stage detector with a different
-  backbone, never used in training. Also YOLOv8s (same family, bigger) as a near-transfer check.
+* **Choosing λ\*** *(changed: made explicit, and done on the validation split so the test images are not used to
+  pick it)*: the λ > 0 with the highest YOLOv8n mAP on the 500 validation images at σ = 50, among those whose
+  validation PSNR at σ = 50 is at most 1 dB below the control's.
+* **Test:** the 300-image subset (same images and noise seeds as notebooks 05/07) at σ = 0, 15, 25, 50: PSNR and
+  mAP for YOLOv8n, **YOLOv8s** (same family, bigger: near transfer) and **Faster R-CNN ResNet-50-FPN v2**
+  (torchvision, COCO weights: far transfer, never used in training). Paired bootstrap over images (2,000
+  resamples of image-averaged AP, as 05b) for each model against the control.
 
-### 2.2 Hypotheses (provisional)
+### 2.2 Hypotheses
 
-* **H7.** Some λ > 0 raises YOLOv8n mAP at σ = 50 by ≥ 0.010 over the λ = 0 control (bootstrap 95% CI above 0), while
-  costing ≤ 1 dB PSNR.
-* **H8.** On Faster R-CNN, the same model's gain over the control is ≥ 50% of its YOLOv8n gain, with CI above 0. If
-  YOLOv8n gains and Faster R-CNN does not, the denoiser is fitting YOLOv8n specifically ("fooling" it); then we look
-  at the high-frequency energy of the output and at gradients through a third detector.
-* **H9.** The PSNR-vs-mAP curve over λ has an interior optimum for mAP: the largest λ is not the best for detection
-  (too much feature weight lets the denoiser drift from the image).
-* **H10.** The task-trained denoiser does not hurt clean images: mAP at σ = 0 within 0.005 of the control.
+* **H7.** At σ = 50, λ\* raises YOLOv8n mAP by ≥ 0.010 over the λ = 0 control, the bootstrap 95% CI of the
+  image-averaged AP difference is above 0, and λ\*'s test PSNR is at most 1 dB below the control's.
+* **H8.** At σ = 50, λ\*'s Faster R-CNN mAP gain over the control is ≥ 50% of its YOLOv8n gain, and the bootstrap
+  95% CI is above 0. If H7 holds and H8 fails, the denoiser is fitting YOLOv8n specifically. YOLOv8s is reported
+  alongside, not tested.
+* **H9.** The test YOLOv8n mAP at σ = 50, across λ, is highest at some λ below the largest (3): too much feature
+  weight lets the output drift from the image.
+* **H10.** λ\* does not hurt clean images: YOLOv8n mAP at σ = 0 is at least the control's minus 0.005.
 
----
+Exploratory, no thresholds: the PSNR–mAP curve over λ for each detector and σ; neck mean vs layer 21 at λ\*;
+high-frequency energy of the restoration error (a sign of adversarial-looking patterns).
 
 ## 3. Related work to read (and what to take from each)
 
@@ -170,4 +181,4 @@ Bibliographic details are from memory and are checked against the PDFs before th
   results (per-layer curves, CKA, `rel_l2`) are labelled exploratory in the report.
 * **Fooling the detector in Part B.** Handled by the λ = 0 control, the held-out second detector (H8) and a check on
   clean images (H10).
-* **Compute.** Notebook 07 ≈ 1.5–2 h on a T4 (BM3D on the CPU is ~20 min of it). Notebook 08: ~15–20 min per λ.
+* **Compute.** Notebook 07 took ~4 h on a T4 (3.4 h of it BM3D on the CPU). Notebook 08: ~15–20 min of training per λ, plus ~1.5 h of evaluation.
