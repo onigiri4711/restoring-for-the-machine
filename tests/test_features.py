@@ -20,8 +20,8 @@ def test_cka_invariances_and_scale_sensitivity():
     q, _ = torch.linalg.qr(torch.randn(16, 16, dtype=torch.float64))
     rotated = torch.einsum("dc,bchw->bdhw", q.float(), a) * 3.0          # rotate channels, scale by 3
     assert abs(linear_cka(a, rotated) - 1) < 1e-5                        # CKA ignores both
-    d = feature_distances(a, 3.0 * a)
-    assert abs(d["cos"]) < 1e-9 and abs(d["rel_l2"] - 4.0) < 1e-9       # cosine ignores scale, rel_l2 does not
+    d = feature_distances(a, 3.0 * a)                                    # 3.0 * a is float32: ~1e-7 rounding
+    assert abs(d["cos"]) < 1e-6 and abs(d["rel_l2"] - 4.0) < 1e-5       # cosine ignores scale, rel_l2 does not
     assert linear_cka(a, torch.randn(1, 16, 24, 24)) < 0.2               # unrelated maps: low CKA
 
 
