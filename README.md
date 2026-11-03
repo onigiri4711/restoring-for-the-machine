@@ -14,7 +14,7 @@ almost nothing about per-image detection gain (Spearman −0.14 to +0.21).
 
 | Part | Notebook | What it does | Status |
 |---|---|---|---|
-| **A · Feature-space analysis** | `07_feature_analysis.ipynb` | Hooks every layer of YOLOv8n and measures how far damaged / restored features are from clean (cosine, linear CKA, relative L2). Where does damage enter? Does DnCNN restore deep features? Why does CLAHE fail? Does feature distance predict per-image AP loss better than PSNR? | ready to run |
+| **A · Feature-space analysis** | `07_feature_analysis.ipynb` | Hooks every layer of YOLOv8n and measures how far damaged / restored features are from clean (cosine, linear CKA, relative L2). Where does damage enter? Does DnCNN restore deep features? Why does CLAHE fail? Does feature distance predict per-image AP loss better than PSNR? | done: 8 of 13 hypotheses supported (see the report) |
 | **B · Task-driven restoration** | `08_task_driven_dncnn.ipynb` | Fine-tunes DnCNN with pixel MSE + λ × YOLO feature distance (YOLO frozen), sweeps λ, plots PSNR against mAP, and checks on a second detector (Faster R-CNN) that the gain is real and not the denoiser fooling YOLOv8n. | after Part A |
 
 ## Repository layout

@@ -1,0 +1,64 @@
+{
+ "metric": "cos",
+ "layers": [
+  "21"
+ ],
+ "rho_odd": 0.2375,
+ "rule": "PLAN.md section 1.4",
+ "options": [
+  {
+   "metric": "cos",
+   "layers": [
+    "15",
+    "18",
+    "21"
+   ],
+   "rho_odd": 0.2275
+  },
+  {
+   "metric": "cos",
+   "layers": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4"
+   ],
+   "rho_odd": 0.0985
+  },
+  {
+   "metric": "cos",
+   "layers": [
+    "21"
+   ],
+   "rho_odd": 0.2375
+  },
+  {
+   "metric": "rel_l2",
+   "layers": [
+    "15",
+    "18",
+    "21"
+   ],
+   "rho_odd": 0.2367
+  },
+  {
+   "metric": "rel_l2",
+   "layers": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4"
+   ],
+   "rho_odd": 0.135
+  },
+  {
+   "metric": "rel_l2",
+   "layers": [
+    "19"
+   ],
+   "rho_odd": 0.2208
+  }
+ ]
+}

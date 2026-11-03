@@ -1,0 +1,8 @@
+degradation,severity,n_restorers,best_map,best_feat,best_psnr,rank_rho_feat,rank_rho_psnr,feat_ok,psnr_ok
+gaussian,15.0,3,dncnn,dncnn,dncnn,1.0,1.0,True,True
+gaussian,25.0,4,dncnn,dncnn,dncnn,1.0,1.0,True,True
+gaussian,50.0,4,dncnn,dncnn,dncnn,1.0,1.0,True,True
+jpeg,10.0,3,classical,classical,classical,1.0,1.0,True,True
+jpeg,30.0,3,classical,classical,classical,1.0,1.0,True,True
+low_light,0.6,7,gamma>dncnn,gamma>dncnn,gamma>dncnn,0.9642857142857145,0.3214285714285715,True,True
+low_light,0.8,7,gamma>dncnn,gamma>dncnn,dncnn>gamma,1.0,0.07142857142857144,True,False

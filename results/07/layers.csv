@@ -1,0 +1,18 @@
+layer,type,channels,stride,shape,neck_output
+input,input,3,1,"(448, 640)",False
+0,Conv,16,2,"(224, 320)",False
+1,Conv,32,4,"(112, 160)",False
+2,C2f,32,4,"(112, 160)",False
+3,Conv,64,8,"(56, 80)",False
+4,C2f,64,8,"(56, 80)",False
+5,Conv,128,16,"(28, 40)",False
+6,C2f,128,16,"(28, 40)",False
+7,Conv,256,32,"(14, 20)",False
+8,C2f,256,32,"(14, 20)",False
+9,SPPF,256,32,"(14, 20)",False
+12,C2f,128,16,"(28, 40)",False
+15,C2f,64,8,"(56, 80)",True
+16,Conv,64,16,"(28, 40)",False
+18,C2f,128,16,"(28, 40)",True
+19,Conv,128,32,"(14, 20)",False
+21,C2f,256,32,"(14, 20)",True

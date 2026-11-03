@@ -1,0 +1,170 @@
+{
+ "QUICK": false,
+ "n_images": 300,
+ "clean_map": 0.3865,
+ "noise_ceiling": 0.741,
+ "verdicts": {
+  "H1a": false,
+  "H1b": true,
+  "H2a": false,
+  "H2b": true,
+  "H2c": false,
+  "H3a": true,
+  "H3b": true,
+  "H3c": true,
+  "H3d": true,
+  "H4a": false,
+  "H4b": false,
+  "H5": true,
+  "H6": true
+ },
+ "evidence": {
+  "H1a": {
+   "sigma 25": {
+    "argmax_layer": "1",
+    "layer0": 0.0893,
+    "neck": 0.1091
+   },
+   "sigma 50": {
+    "argmax_layer": "7",
+    "layer0": 0.2099,
+    "neck": 0.1967
+   }
+  },
+  "H1b": {
+   "jpeg10_neck_over_l0": 3.3298,
+   "gauss50_neck_over_l0": 0.9373
+  },
+  "H2a": {
+   "sigma 15": {
+    "R_neck": 0.5778,
+    "R_pixel": 0.8165,
+    "map_recovery": 0.8247
+   },
+   "sigma 25": {
+    "R_neck": 0.6153,
+    "R_pixel": 0.8847,
+    "map_recovery": 0.7741
+   },
+   "sigma 50": {
+    "R_neck": 0.5904,
+    "R_pixel": 0.934,
+    "map_recovery": 0.7242
+   }
+  },
+  "H2b": {
+   "sigma 15": {
+    "R_neck": 0.5778,
+    "R_pixel": 0.8165,
+    "map_recovery": 0.8247
+   },
+   "sigma 25": {
+    "R_neck": 0.6153,
+    "R_pixel": 0.8847,
+    "map_recovery": 0.7741
+   },
+   "sigma 50": {
+    "R_neck": 0.5904,
+    "R_pixel": 0.934,
+    "map_recovery": 0.7242
+   }
+  },
+  "H2c": {
+   "sigma 15": {
+    "R_neck": 0.5778,
+    "R_pixel": 0.8165,
+    "map_recovery": 0.8247
+   },
+   "sigma 25": {
+    "R_neck": 0.6153,
+    "R_pixel": 0.8847,
+    "map_recovery": 0.7741
+   },
+   "sigma 50": {
+    "R_neck": 0.5904,
+    "R_pixel": 0.934,
+    "map_recovery": 0.7242
+   }
+  },
+  "H3a": {
+   "level 0.6": {
+    "R_pixel": 0.4714,
+    "R_early": -0.2048,
+    "R_neck": -0.098
+   },
+   "level 0.8": {
+    "R_pixel": 0.4037,
+    "R_early": -0.1364,
+    "R_neck": -0.0414
+   }
+  },
+  "H3b": {
+   "map_dark_only": 0.3013,
+   "map_low_light": 0.1207,
+   "threshold": 0.2536
+  },
+  "H3c": {
+   "none": 0.3013,
+   "gamma": 0.3826,
+   "clahe_L": 0.3228
+  },
+  "H3d": {
+   "level 0.6": {
+    "best": "gamma>dncnn",
+    "neck": {
+     "clahe_L": 0.1468,
+     "classical": 0.1248,
+     "dncnn": 0.0843,
+     "dncnn>gamma": 0.0893,
+     "gamma": 0.1509,
+     "gamma>dncnn": 0.076
+    }
+   },
+   "level 0.8": {
+    "best": "gamma>dncnn",
+    "neck": {
+     "clahe_L": 0.1998,
+     "classical": 0.1821,
+     "dncnn": 0.126,
+     "dncnn>gamma": 0.1388,
+     "gamma": 0.216,
+     "gamma>dncnn": 0.1214
+    }
+   }
+  },
+  "H4a": {
+   "mean_rho_feat": 0.2994,
+   "mean_rho_psnr": -0.0841,
+   "share_runs_feat_beats_psnr": 0.9722,
+   "n_runs": 36
+  },
+  "H4b": {
+   "mean_rho_feat": 0.2568,
+   "mean_rho_psnr": 0.056,
+   "share_pairs_feat_beats_psnr": 1.0,
+   "n_pairs": 24
+  },
+  "H5": {
+   "sigma 25": {
+    "neck_bm3d": 0.0472,
+    "neck_dncnn": 0.042,
+    "rel_gap": 0.1241,
+    "psnr_gap": 0.7506
+   },
+   "sigma 50": {
+    "neck_bm3d": 0.0924,
+    "neck_dncnn": 0.0806,
+    "rel_gap": 0.147,
+    "psnr_gap": 2.1743
+   }
+  },
+  "H6": {
+   "feat_matches": 7,
+   "psnr_matches": 6,
+   "conditions": 7,
+   "needed": 6,
+   "mean_rank_rho_feat": 0.9949,
+   "mean_rank_rho_psnr": 0.7704
+  }
+ }
+}
