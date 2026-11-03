@@ -15,7 +15,7 @@ almost nothing about per-image detection gain (Spearman −0.14 to +0.21).
 | Part | Notebook | What it does | Status |
 |---|---|---|---|
 | **A · Feature-space analysis** | `07_feature_analysis.ipynb` | Hooks every layer of YOLOv8n and measures how far damaged / restored features are from clean (cosine, linear CKA, relative L2). Where does damage enter? Does DnCNN restore deep features? Why does CLAHE fail? Does feature distance predict per-image AP loss better than PSNR? | done: 8 of 13 hypotheses supported (see the report) |
-| **B · Task-driven restoration** | `08_task_driven_dncnn.ipynb` | Fine-tunes DnCNN with pixel MSE + λ × YOLO feature distance (YOLO frozen), sweeps λ, plots PSNR against mAP, and checks on a second detector (Faster R-CNN) that the gain is real and not the denoiser fooling YOLOv8n. | after Part A |
+| **B · Task-driven restoration** | `08_task_driven_dncnn.ipynb` | Fine-tunes DnCNN with pixel MSE + λ × YOLO feature distance (YOLO frozen), sweeps λ, plots PSNR against mAP, and checks on a second detector (Faster R-CNN) that the gain is real and not the denoiser fooling YOLOv8n. | ready to run (H7–H10 frozen) |
 
 ## Repository layout
 
@@ -27,6 +27,9 @@ rftm/                   shared code
   coco.py               COCO val2017 subset and YOLO -> COCO detections / mAP / per-image AP
   features.py           forward hooks on YOLOv8n, letterbox crop, cosine / CKA / relative-L2 distances
   analysis.py           all Part A analysis on plain tables, including the hypothesis scorecard
+  taskloss.py           Part B: differentiable YOLO features, feature loss, COCO crops, the training loop
+  detectors.py          Part B test detectors: YOLOv8n / YOLOv8s and Faster R-CNN R50-FPN v2
+  analysis8.py          Part B analysis: choosing lambda*, paired bootstrap, scorecard for H7–H10
   plots.py              Part A figures
   kaggle.py             finding inputs on Kaggle
 prior/                  results carried over from the first project (inputs and reference numbers)
@@ -34,7 +37,7 @@ prior/                  results carried over from the first project (inputs and 
   04/dncnn_eval.csv         DnCNN PSNR on CBSD68 / BSD
   05/, 05b/                 mAP sweeps, per-image AP, CIs; 05/subset_ids.json is the frozen 300-image subset
 notebooks/              Kaggle notebooks (07 = Part A, 08 = Part B)
-results/07/             outputs of notebook 07 (copied from Kaggle after the run)
+results/07/, results/08/ outputs of notebooks 07 and 08 (copied from Kaggle after each run)
 figures/                figures for the report
 tests/                  test_analysis.py (numpy only), test_features.py (needs torch)
 docs/                   notes
@@ -51,7 +54,10 @@ Notebooks run on **Kaggle (GPU T4, Internet ON)**. Notebook 07:
    (Save Version → Save & Run All, ~1.5–2 h).
 4. Download `/kaggle/working/outputs/07/` into `results/07/`.
 
-Tests: `python tests/test_analysis.py` (no GPU needed), `python tests/test_features.py` (needs torch).
+Notebook 08 works the same way (same dataset input; ~4–5 h; `QUICK = True` first). It deletes COCO from its
+working folder at the end, so its output downloads in one go.
+
+Tests: `python tests/test_analysis.py` and `python tests/test_analysis8.py` (no GPU needed), `python tests/test_features.py` (needs torch).
 
 ## Reproducibility
 
