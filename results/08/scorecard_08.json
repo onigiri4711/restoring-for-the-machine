@@ -1,0 +1,58 @@
+{
+ "QUICK": false,
+ "lambda_star": "lam_1",
+ "loss": {
+  "metric": "cos",
+  "layers": [
+   21
+  ]
+ },
+ "scales": {
+  "mse0": 0.0018,
+  "d0": 0.0731,
+  "d0_neck": 0.0458
+ },
+ "verdicts": {
+  "H7": false,
+  "H8": false,
+  "H9": true,
+  "H10": true
+ },
+ "evidence": {
+  "H7": {
+   "lambda_star": "lam_1",
+   "map_gain": 0.0096,
+   "ci": [
+    0.0037,
+    0.0276
+   ],
+   "psnr_cost_db": 0.2371
+  },
+  "H8": {
+   "frcnn_gain": 0.0163,
+   "frcnn_ci": [
+    -0.0014,
+    0.0178
+   ],
+   "yolov8n_gain": 0.0096,
+   "share_kept": 1.6969,
+   "yolov8s_gain_reported": 0.0064
+  },
+  "H9": {
+   "curve": {
+    "lam_0": 0.3022,
+    "lam_0.03": 0.3123,
+    "lam_0.1": 0.3139,
+    "lam_0.3": 0.3165,
+    "lam_1": 0.3119,
+    "lam_3": 0.3092
+   },
+   "best": "lam_0.3"
+  },
+  "H10": {
+   "clean_map_star": 0.3897,
+   "clean_map_control": 0.3882,
+   "diff": 0.0014
+  }
+ }
+}
